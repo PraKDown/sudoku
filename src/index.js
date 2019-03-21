@@ -174,29 +174,32 @@ module.exports = function solveSudoku(matrix) {
   }
   
   function hard(matrix) {
-    if(check(matrix) > 0) perem = medium(matrix);
-    if(check(matrix) == 0) return matrix;
-    let array_step = [];
-    for (let k = 0; k < matrix.length; k++) {
-      array_step[k] = matrix[k].slice(); 
-    }
+    let n;
+    let m;
     for (let i = 0; i < matrix.length; i++) {
-      for (let j = 0; j < matrix[i].length; j++) {
-        if (matrix[i][j] == 0) { 
-          matrix[i][j] = first_step(i, j, matrix);
-          for (let l = 0; l < matrix[i][j].length; l++) { 
-            array_step[i][j] = matrix[i][j][l];
-            // console.log(matrix[i][j], i + ":" + j, array_step);
-            if(check(array_step) > 0) perem = medium(array_step);
-            if(check(array_step) == -1) { if (l == matrix[i][j].length - 1) { return "error" } continue;}
-            if(check(array_step) == 0) return array_step;
-            if(check(array_step) > 0) return hard(array_step);
-          }
-        }
-      }
+      if (matrix[i].indexOf(0) != -1) {
+        n = i;
+        m = matrix[i].indexOf(0);
+        break;
+      } 
     }
-  
+    let array = first_step(n, m, matrix);
+    for (let i = 0; i < array.length; i++) {
+      let array_step = [];
+      for (let k = 0; k < matrix.length; k++) {
+        array_step[k] = matrix[k].slice(); 
+      }
+      array_step[n][m] = array[i];
+      // console.log(array + " - " + n + ":" + m + " - " + array[i], array_step);
+      medium(array_step);
+      if (check(array_step) == -1) continue;
+      if (check(array_step) == 0) return array_step;
+      let step = hard(array_step);
+      if (step != undefined) return step;
+    }
   }
   
-  return hard(matrix);
+  medium(matrix);
+  if (check(matrix) == 0) return matrix;
+  if (check(matrix) > 0) return hard(matrix);
 }
