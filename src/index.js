@@ -176,17 +176,16 @@ module.exports = function solveSudoku(matrix) {
   function hard(matrix) {
     if(check(matrix) > 0) perem = medium(matrix);
     if(check(matrix) == 0) return matrix;
-    let array_step = [];
-    for (let k = 0; k < matrix.length; k++) {
-      array_step[k] = matrix[k].slice(); 
-    }
     for (let i = 0; i < matrix.length; i++) {
       for (let j = 0; j < matrix[i].length; j++) {
         if (matrix[i][j] == 0) { 
           matrix[i][j] = first_step(i, j, matrix);
           for (let l = 0; l < matrix[i][j].length; l++) { 
+						let array_step = [];
+						for (let k = 0; k < matrix.length; k++) {
+							array_step[k] = matrix[k].slice(); 
+						}
             array_step[i][j] = matrix[i][j][l];
-            // console.log(matrix[i][j], i + ":" + j, array_step);
             if(check(array_step) > 0) perem = medium(array_step);
             if(check(array_step) == -1) { if (l == matrix[i][j].length - 1) { return "error" } continue;}
             if(check(array_step) == 0) return array_step;
@@ -198,5 +197,5 @@ module.exports = function solveSudoku(matrix) {
   
   }
   
-  return hard(matrix);
+	return hard(matrix);
 }
